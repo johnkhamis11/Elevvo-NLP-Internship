@@ -1,117 +1,92 @@
-# NLP Tasks — Transformer & Classical ML Pipelines
+<div align="center">
 
-A collection of NLP mini-projects covering text classification, question answering, summarization, and retrieval-augmented generation (RAG), using both classical ML (TF-IDF + scikit-learn) and pre-trained transformer models (Hugging Face).
+# 🧠 NLP Playground
 
-## 📁 Repository Structure
+**Five end-to-end NLP projects** — from classic TF-IDF pipelines to transformers and retrieval-augmented generation.
 
-```
-├── Task_1_Sentiment_Analysis_on_Product_Reviews.ipynb
-├── Task_2_News_Category_Classification.ipynb
-├── Task_6_Question_Answering_with_Transformers.ipynb
-├── Task_7_Text_Summarization.ipynb
-├── Task_8_RAG_Talent_Search.ipynb
-├── rag_utils.py
-└── requirements.txt
-```
+![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python&logoColor=white)
+![Transformers](https://img.shields.io/badge/🤗-Transformers-yellow)
+![scikit--learn](https://img.shields.io/badge/scikit--learn-ML-orange?logo=scikitlearn)
+![LangChain](https://img.shields.io/badge/LangChain-RAG-green)
+
+</div>
 
 ---
 
-## Task 1 — Sentiment Analysis on Product Reviews
+## 🚀 What's inside
 
-Binary sentiment classification (positive/negative) on the **IMDb Reviews** dataset (50,000 reviews, balanced).
-
-**Pipeline:** text cleaning & stopword removal → TF-IDF vectorization → Logistic Regression
-
-**Results:**
-| Model | Accuracy |
-|---|---|
-| Logistic Regression | **89.47%** |
-| Naive Bayes (bonus) | 86.44% |
-
-**Bonus:** most frequent positive/negative words visualized, plus a plot of the most influential words per class based on model weights.
-
-**Tools:** Pandas, NLTK, Scikit-learn
+| Folder | The one-liner | Best result |
+|--------|----------------|-------------|
+| [Task 1](#task-1--news-category-classifier) — News Category Classifier | Sort headlines into World / Sports / Business / Sci-Tech | **91.2%** accuracy |
+| [Task 2](#task-2--text-summarization) — Text Summarization | Long articles → tight summaries | **0.44 ROUGE-1** |
+| [Task 3](#task-3--question-answering) — Question Answering | Ask a question, get the exact answer span | **84.5 EM / 92.4 F1** |
+| [Task 4](#task-4--sentiment-analysis) — Sentiment Analysis | Is this review a 👍 or a 👎? | **89.5%** accuracy |
+| [Task 5](#task-5--rag-talent-search) — RAG Talent Search | "Find me a Junior Data Analyst who knows SQL" 🔍 | 220 resumes, live semantic search |
 
 ---
 
-## Task 2 — News Category Classification
+## Task 1 — News Category Classifier
 
-Multiclass classification of news articles into **World / Sports / Business / Sci-Tech** using the **AG News** dataset (120,000 train / 7,600 test articles).
+> *120,000 AG News headlines, four categories, one model that has to pick.*
 
-**Pipeline:** tokenization → stopword removal → lemmatization → TF-IDF → multiclass classifiers
+Full text pipeline (tokenize → stopwords → lemmatize) feeding TF-IDF into three head-to-head classifiers.
 
-**Results:**
-| Model | Accuracy | Macro F1 |
-|---|---|---|
-| Logistic Regression | 91.0% | 0.910 |
-| **Linear SVM** | **91.2%** | **0.912** |
-| Random Forest | 85.7–86.1% | 0.856 |
-| Feedforward NN (Keras) — bonus | 87.3% | — |
-
-**Bonus:** top-word bar plots and word clouds per category; a simple feedforward neural network trained on TF-IDF features as an alternative to the classic models.
-
-**Tools:** Pandas, Scikit-learn, NLTK, TensorFlow/Keras
+- 🥇 **Linear SVM: 91.2%** — edges out Logistic Regression (91.0%) and Random Forest (85.7%)
+- 🎨 Bonus: word clouds per category + a Keras feedforward network (87.3%) for good measure
 
 ---
 
-## Task 6 — Question Answering with Transformers
+## Task 2 — Text Summarization
 
-Extractive QA system on **SQuAD v1.1**: given a context passage and a question, the model extracts the answer span.
+> *CNN/DailyMail articles, compressed to their essence by BART.*
 
-**Models compared:**
-| Model | Exact Match | F1 |
-|---|---|---|
-| DistilBERT (distilled-squad) | 82.5 | 91.87 |
-| **BERT-large (whole-word-masking)** | **84.5** | **92.41** |
-| RoBERTa-base (SQuAD2) | 76.5 | 86.56 |
-
-**Bonus:** interactive command-line interface — enter a passage and ask questions about it, with an extracted answer + confidence score.
-
-**Tools:** Hugging Face Transformers
+- 📝 **ROUGE-1: 0.44** on abstractive summaries
+- ⚖️ Bonus: extractive (TextRank) vs. abstractive showdown — abstractive wins, as the literature predicts
+- 🔧 Bonus: fine-tuned T5-small as a taste of custom training
 
 ---
 
-## Task 7 — Text Summarization
+## Task 3 — Question Answering
 
-Abstractive summarization of **CNN/DailyMail** news articles using **BART** (`facebook/bart-large-cnn`).
+> *Give it a paragraph and a question — it finds the exact words that answer it.*
 
-**ROUGE F1 scores (abstractive, BART):**
-| Metric | Score |
-|---|---|
-| ROUGE-1 | 0.443 |
-| ROUGE-2 | 0.233 |
-| ROUGE-L | 0.320 |
+Three transformer heavyweights, benchmarked on SQuAD v1.1:
 
-**Bonus:**
-- Extractive summarization with **TextRank** (`sumy`) for comparison — ROUGE-1: 0.310, ROUGE-2: 0.117, ROUGE-L: 0.200 (abstractive outperforms extractive, as expected).
-- Fine-tuned **T5-small** on a small custom sample as a proof-of-concept fine-tuning workflow.
-
-**Tools:** Hugging Face Transformers, Datasets, ROUGE-score
+- 🏆 **BERT-large (whole-word-masking): 84.5 EM / 92.4 F1**
+- DistilBERT and RoBERTa close behind
+- 💻 Bonus: an interactive CLI — paste your own passage, ask anything
 
 ---
 
-## Task 8 — RAG-Powered Talent Search Engine
+## Task 4 — Sentiment Analysis
 
-A Retrieval-Augmented Generation pipeline that lets recruiters search resumes using natural-language queries (e.g. *"Junior Data Analyst who knows SQL and Tableau"*), built on the **Resume Entities for NER** dataset (220 real resumes).
+> *50,000 IMDb reviews walk into a classifier...*
 
-**Pipeline:**
-1. Parse resumes (DataTurks JSON annotation format) and extract skills/experience level.
-2. Embed resumes with a HuggingFace sentence-transformer (`all-MiniLM-L6-v2`) and store them in **ChromaDB**.
-3. Semantic search over the vector store given a natural-language query.
-4. **LLM-based evaluation** (industry constraint): the top-3 retrieved resumes are passed to an LLM, which generates a text explanation of why each candidate fits — instead of a raw similarity score. Supports OpenAI/GPT if an API key is configured, otherwise falls back to a local HuggingFace model (`flan-t5-base`), so it runs fully free of charge.
+Cleaned & vectorized (TF-IDF) reviews, then let **Logistic Regression** decide positive vs. negative.
 
-**Bonus additions:**
-- **Bias check** — flags skew in retrieval results by category, resume length, or (heavily caveated) name-based gender hints.
-- Chat-style follow-up Q&A about a specific candidate.
-
-**Tools:** LangChain, ChromaDB, Sentence-Transformers, Hugging Face Transformers, OpenAI (optional)
+- 🏆 **89.5% accuracy** (Naive Bayes bonus run: 86.4%)
+- 📊 Bonus visualizations: the words that scream "positive" vs. "negative," plus the words the model itself leans on most
 
 ---
 
-## Setup
+## Task 5 — RAG Talent Search
+
+> *"Recruiters don't want to read 1,000 resumes." So this reads them instead.*
+
+A full RAG pipeline over 220 real resumes:
+
+`Embed → ChromaDB → semantic search → LLM explains the fit`
+
+- 🎯 Ask in plain English, get ranked candidates *and* a written reason why each one fits
+- 🆓 Runs free with a local model, or plug in an OpenAI key for sharper answers
+- ⚖️ Bonus: an automated bias-check report + candidate follow-up Q&A
+
+---
+
+## 🛠️ Setup
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Each notebook can be run end-to-end independently; datasets are loaded from local CSV/JSON files (or Hugging Face Datasets for Task 7).
+Every notebook runs top-to-bottom on its own — no hidden setup steps, no missing pieces.
