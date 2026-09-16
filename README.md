@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧠 NLP Playground
+# 🧠 NLP Internship
 
 **Five end-to-end NLP projects** — from classic TF-IDF pipelines to transformers and retrieval-augmented generation.
 
